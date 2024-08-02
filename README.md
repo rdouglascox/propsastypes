@@ -16,7 +16,7 @@ This will give us an initial feel for the correspondence. However the limitation
 
 > $\lambda x$:(A+B).case $x$ of $\lambda y$:A.inr $y$ as (B+A) | $\lambda y$:B.inl $y$ as (B+A) 
 
-> $\lambda x$:(A$\times$B).{snd $x$,fst $x$}
+> $\lambda x$:(AxB).{snd $x$,fst $x$}
 
 The shortcoming is a result of the fact that we need to annotate abstractions and other terms in order to use our simple type-checking function. We will overcome this shortcoming by taking advantage of the fact that there's an algorithm available that can "infer" or "reconstruct" the type of a "raw" lambda term if that term can be typed according to certain typing rules. We'll implement a type-inference algorithm for our extended version of the simply typed lambda calculus. Our "proofs" of the commutativity of sums and of the commutativity of products become the following respectively:
 

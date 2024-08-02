@@ -40,7 +40,8 @@ The symbols -> (production),  **|**  (union)
 and **eps** (empty rule) belong to the BNF notation.
 All other symbols are terminals.
 
-  | //Term// | -> | //VarId//
+  | //Term// | -> | ``(`` //Term// ``)``
+  |  |  **|**  | //VarId//
   |  |  **|**  | ``(`` //Term// //Term// ``)``
   |  |  **|**  | ``\`` //VarId// ``:`` //Type// ``.`` //Term//
   |  |  **|**  | ``{`` //Term// ``,`` //Term// ``}``
@@ -49,7 +50,7 @@ All other symbols are terminals.
   |  |  **|**  | ``inl`` //Term// ``as`` //Type//
   |  |  **|**  | ``inr`` //Term// ``as`` //Type//
   |  |  **|**  | ``case`` //Term// ``of`` //Term// ``|`` //Term//
-  |  |  **|**  | ``abort`` //Type// //Term//
+  |  |  **|**  | ``abort`` //Term// //Type//
   | //Type// | -> | ``A``
   |  |  **|**  | ``B``
   |  |  **|**  | ``C``

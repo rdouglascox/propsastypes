@@ -68,7 +68,8 @@ Term
   | 'inl' Term 'as' Type { ESTLC.Abs.Inl $2 $4 }
   | 'inr' Term 'as' Type { ESTLC.Abs.Inr $2 $4 }
   | 'case' Term 'of' Term '|' Term { ESTLC.Abs.Case $2 $4 $6 }
-  | 'abort' Type Term { ESTLC.Abs.Abort $2 $3 }
+  | 'abort' Term Type { ESTLC.Abs.Abort $2 $3 }
+  | '(' Term ')' { $2 }
 
 Type :: { ESTLC.Abs.Type }
 Type

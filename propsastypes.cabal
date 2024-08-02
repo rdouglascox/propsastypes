@@ -31,6 +31,7 @@ library
       ESTLC.Par
       ESTLC.Print
       ESTLC.Skel
+      Examples
       Lib
       Printing
       TypeChecking

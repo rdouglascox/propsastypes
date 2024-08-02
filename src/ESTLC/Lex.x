@@ -40,7 +40,7 @@ $white+ ;
     { tok (eitherResIdent TV) }
 
 -- token VarId
-[f g h p q r s u v w x y z]
+$l ([\' \_]| ($d | $l)) *
     { tok (eitherResIdent T_VarId) }
 
 -- Keywords and Ident

@@ -59,7 +59,8 @@ VarId  : L_VarId { ESTLC.Abs.VarId $1 }
 
 Term :: { ESTLC.Abs.Term }
 Term
-  : VarId { ESTLC.Abs.Var $1 }
+  : '(' Term ')' { $2 }
+  | VarId { ESTLC.Abs.Var $1 }
   | '(' Term Term ')' { ESTLC.Abs.App $2 $3 }
   | '\\' VarId ':' Type '.' Term { ESTLC.Abs.Abs $2 $4 $6 }
   | '{' Term ',' Term '}' { ESTLC.Abs.Pair $2 $4 }
