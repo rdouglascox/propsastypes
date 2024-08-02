@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="" />
+</head>
+<body>
+<h1 id="propositions-as-types-programs-as-proofs">Propositions as Types,
+Programs as Proofs</h1>
+<p>This is a not-so-brief tutorial on the Curry-Howard correspondence
+between <em>propositions</em> of intuitionistic logic and <em>types</em>
+of an extended version of the simply typed lambda calculus, and between
+Gentzen style natural deduction <em>proofs</em> of such propositions and
+<em>terms</em> of such a calculus.</p>
+<p>Its intended audience is philosophers with a background in logic. It
+presupposes some understanding of classical logic and Gentzen style
+natural deduction proofs but that’s all. Unlike many presentations of
+the correspondence which only focus on the “implicational fragment” of
+intuitionistic propositional logic, the following tutorial explicitly
+discusses the correspondence between function types and conditionals,
+sum types and disjunctions, product types and conjunctions.</p>
+<p>The aim is to convey an understanding of the Curry-Howard
+correspondence in a hands-on way. Perhaps it would be possible to grasp
+the correspondence in an immediate way if one had a good background
+intuitionistic logic—in particular in Gentzen style natural deduction
+proofs in intuitionist logic—and in some extended version of the simply
+typed lambda calculus.</p>
+<p>The Curry-Howard correspondence provides a link between the worlds of
+logic and programming. There are many instances of the correspondence
+between different logics and different “programming languages.” We focus
+here on the correspondence between intuitionistic propositional logic
+and an extended version of the simply typed lambda calculus—a primitive
+functional programming language.</p>
+<p>As I said, the aim is to convey an understanding in a hands-on way.
+So we will be implementing our extended version of the simply typed
+lambda calculus in the Haskell programming language, a language that
+takes its name from one of the same people the Curry-Howard
+correspondence gets its name from, Haskell Curry. I won’t be trying to
+convey the basis of Haskell here. But I’ll do my best to explain what
+the code is doing.</p>
+<p>We will begin, in the first instance, by trying to implement a
+function that checks whether a term of our extended simply typed lambda
+calculus (henceforth ESTLC) is well-typed and returns a derivation of
+the type of the term if it is. Given how we will have set things up, a
+term in our ESTLC will be well-typed if and only if its type corresponds
+to a tautology in intuitionistic propositional logic. The derivation we
+get if our term is well-typed will correspond to a Gentzen style natural
+deduction proof of the proposition corresponding to the type.</p>
+<p>This will give us an initial feel for the correspondence. However the
+limitation of our approach will be immediately felt: we effectively end
+up with a somewhat cumbersome way of writing natural deduction proofs in
+a linear format, that format being the format of an ESTLC term. True,
+our type-checker is a proof-checker, and we can easily translate our
+linear proofs into more familiar tree-style natural deduction proofs.
+But our terms are cumbersome to write. Our “proofs” of the commutativity
+of sums and of the commutativity of products look like this
+respectively:</p>
+<blockquote>
+<p><span class="math inline"><em>λ</em><em>x</em></span>:(A+B).case
+<span class="math inline"><em>x</em></span> of <span
+class="math inline"><em>λ</em><em>y</em></span>:A.inr <span
+class="math inline"><em>y</em></span> as (B+A) | <span
+class="math inline"><em>λ</em><em>y</em></span>:B.inl <span
+class="math inline"><em>y</em></span> as (B+A)</p>
+</blockquote>
+<blockquote>
+<p><span class="math inline"><em>λ</em><em>x</em></span>:(A<span
+class="math inline">×</span>B).{snd <span
+class="math inline"><em>x</em></span>,fst <span
+class="math inline"><em>x</em></span>}</p>
+</blockquote>
+<p>The shortcoming is a result of the fact that we need to annotate
+abstractions and other terms in order to use our simple type-checking
+function. We will overcome this shortcoming by taking advantage of the
+fact that there’s an algorithm available that can “infer” or
+“reconstruct” the type of a “raw” lambda term if that term can be typed
+according to certain typing rules. We’ll implement a type-inference
+algorithm for our extended version of the simply typed lambda calculus.
+Our “proofs” of the commutativity of sums and of the commutativity of
+products become the following respectively:</p>
+<blockquote>
+<p><span class="math inline"><em>λ</em><em>x</em></span>.case <span
+class="math inline"><em>x</em></span> of <span
+class="math inline"><em>λ</em><em>y</em></span>.inr <span
+class="math inline"><em>y</em></span> | <span
+class="math inline"><em>λ</em><em>y</em></span>.inl <span
+class="math inline"><em>y</em></span></p>
+</blockquote>
+<blockquote>
+<p><span class="math inline"><em>λ</em><em>x</em></span>.{snd <span
+class="math inline"><em>x</em></span>,fst <span
+class="math inline"><em>x</em></span>}</p>
+</blockquote>
+<p>Finally, we will implement a function for evaluating our lambda
+terms, or “running” our “programs”. Since we are coming at the issue
+from the side of logic, this will reassure us that we have bridged the
+world of logic and programming. We will see how our “program”, given an
+“input”, returns a particular “output”. For example, this:</p>
+<blockquote>
+<p>(<span class="math inline"><em>λ</em><em>x</em></span>.{snd <span
+class="math inline"><em>x</em></span>,fst <span
+class="math inline"><em>x</em></span>} {true,false})</p>
+</blockquote>
+<p>Which happens to have the type (Bool <span
+class="math inline">×</span> Bool), will evaluate to this:</p>
+<blockquote>
+<p>{false,true}</p>
+</blockquote>
+<p>Which, not accidentally, also has the type (Bool <span
+class="math inline">×</span> Bool). A further nice feature of
+implementing a function for evaluating our lambda terms is that if our
+“proofs” of certain propositions can ever be evaluated they will remain
+proofs of the same propositions, just simpler proofs. It turns out that
+this illustrates the final remaining part of the Curry-Howard
+correspondence, namely, that evaluation, or “running” the “program”
+corresponds to proof simplification.</p>
+<p>Let’s jump right in and start describing our extended version of the
+simply typed lambda calculus. We start with a description of our types.
+Here is how we specify our types as a data type in Haskell:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Type</span> <span class="ot">=</span> <span class="dt">A</span> </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">B</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">C</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">D</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Func</span> <span class="dt">Type</span> <span class="dt">Type</span>          <span class="co">--e.g. (A-&gt;B)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Sum</span> <span class="dt">Type</span> <span class="dt">Type</span>           <span class="co">--e.g. (A+B)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Prod</span> <span class="dt">Type</span> <span class="dt">Type</span>          <span class="co">--e.g. (A*B)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Bottom</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>          <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>)</span></code></pre></div>
+<p>According to this definition a type is either an unspecified base
+type, A, B, C, or D, a function type, a sum type, a product type, or the
+empty type. The expressions <code>Func</code>, <code>Sum</code>, and
+<code>Prod</code> here are all data constructors. They construct data of
+the type <code>Type</code> given two bits of data of the type
+<code>Type</code>. <code>A</code>, <code>B</code>, <code>C</code>,
+<code>D</code>, and <code>Bottom</code> are also data constructors. They
+construct data of the type <code>Type</code> given no other bits of
+data. The analogy here is with two place and zero place connectives in
+logic. The line <code>deriving (Show,Eq)</code> just tells Haskell that
+we want to be able to print data of this type in an obvious way and that
+we want to be able to compare it for equality in an obvious way.</p>
+<p>Here is how we specify our terms as a data type in Haskell:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Term</span> <span class="ot">=</span> <span class="dt">Var</span> <span class="dt">Variable</span>            <span class="co">--e.g. x,y,z</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Abs</span> <span class="dt">Variable</span> <span class="dt">Type</span> <span class="dt">Term</span>  <span class="co">--e.g. \x:(A-&gt;B).x</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">App</span> <span class="dt">Term</span> <span class="dt">Term</span>           <span class="co">--e.g. (x y)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Pair</span> <span class="dt">Term</span> <span class="dt">Term</span>          <span class="co">--e.g. {x,y}</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Fst</span> <span class="dt">Term</span>                <span class="co">--e.g. fst x </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Snd</span> <span class="dt">Term</span>                <span class="co">--e.g. snd x</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Inl</span> <span class="dt">Term</span> <span class="dt">Type</span>           <span class="co">--e.g. inl x</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Inr</span> <span class="dt">Term</span> <span class="dt">Type</span>           <span class="co">--e.g. inr x </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Case</span> <span class="dt">Term</span> <span class="dt">Term</span> <span class="dt">Term</span>     <span class="co">--e.g. case x of y | z</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>          <span class="op">|</span> <span class="dt">Abort</span> <span class="dt">Term</span> <span class="dt">Type</span>         <span class="co">--e.g. abort x (A-&gt;B)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>          <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>)</span></code></pre></div>
+<p>Notice that our definition of terms depends on our definition of
+types and that some terms are constructed from types and other terms.
+This captures the sense in which some terms in our ESTLC require “type
+annotations” and that variables in abstractions also require such
+abstractions. These are needed for our simple type checking algorithm.
+We will dispense with them once we introduce type
+reconstruction/inference later.</p>
+<p>At this stage it is worth noting that I am just taking for granted
+that we have parsing and printing functions available for our data
+types. That is, we have a way of parsing strings of characters into our
+data types and we have a way of printing them as strings of characters.
+We will want to be able to write things like
+<code>\x(A-&gt;B).{snd x,fst x}</code> and have it parsed into our
+Haskell representation. Notes on parsing and printing can be found
+below. But since these are not central to our task, we set them aside
+for now.</p>
+<p>What we want to do now is write our type-checking function for our
+terms. Now, what we want is not merely a yes/no answer. We want to
+return the type of the term if it is well-typed and nothing otherwise.
+So let us call our function <code>gettype</code>. It will take a context
+and a term and return a “maybe” value. Here’s the skeleton of our
+function. We will fill it in step by step.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">gettype ::</span> <span class="dt">Context</span> <span class="ot">-&gt;</span> <span class="dt">Term</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Type</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gettype ctx trm0 <span class="ot">=</span> <span class="kw">case</span> trm0 <span class="kw">of</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Var</span> x1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Abs</span> x1 typ1 trm1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">App</span> trm1 trm2) <span class="ot">-&gt;</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Pair</span> trm1 trm2) <span class="ot">-&gt;</span> </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Fst</span> trm1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Snd</span> trm1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Inr</span> trm1 typ1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Inr</span> trm1 typ1) <span class="ot">-&gt;</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Case</span> trm1 trm2 trm3) <span class="ot">-&gt;</span> </span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Abort</span> trm1 typ1) <span class="ot">-&gt;</span> </span></code></pre></div>
+<p>To type-check a variable, we just look up its type in the context.
+Since the result is a “maybe” type our result will already be of the
+right type. So we have:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">gettype ::</span> <span class="dt">Context</span> <span class="ot">-&gt;</span> <span class="dt">Term</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Type</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gettype ctx trm0 <span class="ot">=</span> <span class="kw">case</span> trm0 <span class="kw">of</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Var</span> x1) <span class="ot">-&gt;</span> Map.lookup x1 ctx </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Abs</span> x1 typ1 trm1) <span class="ot">-&gt;</span> <span class="kw">do</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">App</span> trm1 trm2) <span class="ot">-&gt;</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Pair</span> trm1 trm2) <span class="ot">-&gt;</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Fst</span> trm1) <span class="ot">-&gt;</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Snd</span> trm1) <span class="ot">-&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Inr</span> trm1 typ1) <span class="ot">-&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Inr</span> trm1 typ1) <span class="ot">-&gt;</span> </span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Case</span> trm1 trm2 trm3) <span class="ot">-&gt;</span> </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>   (<span class="dt">Abort</span> trm1 typ1) <span class="ot">-&gt;</span> </span></code></pre></div>
+<p>To type-check an abstraction we add the type of the variable to the
+context and type-check the body of the abstraction on the new
+context.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | get the type of an abstraction</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ot">gettypeabs ::</span> <span class="dt">Context</span> <span class="ot">-&gt;</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Type</span> <span class="ot">-&gt;</span> <span class="dt">Term</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Type</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>gettypeabs ctx x1 typ1 trm1 <span class="ot">=</span> <span class="kw">do</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> newctx <span class="ot">=</span> Map.insert x1 typ1 ctx</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    typ2 <span class="ot">&lt;-</span> gettype newctx trm1</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> (<span class="dt">Just</span> (<span class="dt">Func</span> typ1 typ2))</span></code></pre></div>
+<p>There is more succinct way of writing this function:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | get the type of an abstraction</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ot">gettypeabs ::</span> <span class="dt">Context</span> <span class="ot">-&gt;</span> <span class="dt">Variable</span> <span class="ot">-&gt;</span> <span class="dt">Type</span> <span class="ot">-&gt;</span> <span class="dt">Term</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Type</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>gettypeabs ctx x1 typ1 trm1 <span class="ot">=</span> <span class="dt">Func</span> <span class="op">&lt;$&gt;</span> <span class="dt">Just</span> typ1 <span class="op">&lt;*&gt;</span> (Map.insert x1 typ1 ctx)</span></code></pre></div>
+</body>
+</html>

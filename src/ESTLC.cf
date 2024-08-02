@@ -1,0 +1,25 @@
+-- build me with: bnfc --haskell -d   -m ESTLC.cf  &&  make
+-- here's our syntax for terms 
+Var.   Term  ::= VarId                                 ;
+App.   Term  ::= "(" Term Term ")"                     ;
+Abs.   Term  ::= "\\" VarId ":" Type "." Term          ;
+Pair.  Term  ::= "{" Term "," Term "}"                 ;
+Fst.   Term  ::= "fst" Term                            ; 
+Snd.   Term  ::= "snd" Term                            ;
+Inl.   Term  ::= "inl" Term "as" Type                  ;
+Inr.   Term  ::= "inr" Term "as" Type                  ;
+Case.  Term  ::= "case" Term "of" Term "|" Term        ;
+Abort. Term  ::= "abort" Term Type                     ;
+
+-- here's our syntax for types
+A.    Type        ::= "A"                                 ;
+B.    Type        ::= "B"                                 ;
+C.    Type        ::= "C"                                 ;
+D.    Type        ::= "D"                                 ;
+Bot.  Type        ::= "Bot"                               ;
+Func.             Type   ::= "(" Type "->" Type ")"       ;
+Sum.              Type   ::= "(" Type "+" Type ")"        ;
+Prod.             Type   ::= "(" Type "*" Type ")"        ;
+
+-- here are our tokens 
+token VarId ["fghpqrsuvwxyz"];
