@@ -1,5 +1,7 @@
 # Propositions as Types, Programs as Proofs 
 
+## Introduction
+
 This is a not-so-brief tutorial on the Curry-Howard correspondence between *propositions* of intuitionistic logic and *types* of an extended version of the simply typed lambda calculus, and between Gentzen style natural deduction *proofs* of such propositions and *terms* of such a calculus.  
 
 Its intended audience is philosophers with a background in logic. It presupposes some understanding of classical logic and Gentzen style natural deduction proofs but that's all. Unlike many presentations of the correspondence which only focus on the "implicational fragment" of intuitionistic propositional logic, the following tutorial explicitly discusses the correspondence between function types and conditionals, sum types and disjunctions, product types and conjunctions. 
@@ -34,6 +36,8 @@ Which happens to have the type (Bool $\times$ Bool), will evaluate to this:
 
 Which, not accidentally, also has the type (Bool $\times$ Bool). A further nice feature of implementing a function for evaluating our lambda terms is that if our "proofs" of certain propositions can ever be evaluated they will remain proofs of the same propositions, just simpler proofs. It turns out that this illustrates the final remaining part of the Curry-Howard correspondence, namely, that evaluation, or "running" the "program" corresponds to proof simplification. 
 
+## Extended Simply Typed Lambda Calculus
+
 Let's jump right in and start describing our extended version of the simply typed lambda calculus. We start with a description of our types. Here is how we specify our types as a data type in Haskell: 
 
 ```haskell 
@@ -44,7 +48,7 @@ data Type = A
           | Func Type Type          --e.g. (A->B)
           | Sum Type Type           --e.g. (A+B)
           | Prod Type Type          --e.g. (A*B)
-          | Bottom 
+          | Bot
           deriving (Show,Eq)
 ```
 
@@ -70,57 +74,94 @@ Notice that our definition of terms depends on our definition of types and that 
 
 At this stage it is worth noting that I am just taking for granted that we have parsing and printing functions available for our data types. That is, we have a way of parsing strings of characters into our data types and we have a way of printing them as strings of characters. We will want to be able to write things like `\x(A->B).{snd x,fst x}` and have it parsed into our Haskell representation. Notes on parsing and printing can be found below. But since these are not central to our task, we set them aside for now. 
 
-What we want to do now is write our type-checking function for our terms. Now, what we want is not merely a yes/no answer. We want to return the type of the term if it is well-typed and nothing otherwise. So let us call our function `gettype`. It will take a context and a term and return a "maybe" value. Here's the skeleton of our function. We will fill it in step by step.
+## Type Checking
+
+What we want to do now is write our type-checking function for our terms. Now, what we want is not merely a yes/no answer. We want to return the type of the term if it is well-typed and nothing otherwise. So let us call our function `gettype`. It will take a context and a term and return a "maybe" value. Here's the skeleton of our function. We will fill it in step by step. A context is defined as follows: 
 
 ```haskell 
-gettype :: Context -> Term -> Maybe Type 
-gettype ctx trm0 = case trm0 of 
-   (Var x1) -> 
-   (Abs x1 typ1 trm1) -> 
-   (App trm1 trm2) -> 
-   (Pair trm1 trm2) -> 
-   (Fst trm1) -> 
-   (Snd trm1) -> 
-   (Inr trm1 typ1) -> 
-   (Inr trm1 typ1) -> 
-   (Case trm1 trm2 trm3) -> 
-   (Abort trm1 typ1) -> 
+type Context = Map.Map VarId Type
+```
+
+Our skeleton looks like this:
+
+```haskell 
+gettype :: Context -> Term -> Maybe Type
+gettype ctx trm0 = case trm0 of
+  (Var x1) -> gettypevar ctx x1
+  (Abs x1 typ1 trm1) -> gettypeabs ctx x1 typ1 trm1
+  (App trm1 trm2) -> gettypeapp ctx trm1 trm2
+  (Pair trm1 trm2) -> gettypepair ctx trm1 trm2
+  (Fst trm1) -> gettypefst ctx trm1
+  (Snd trm1) -> gettypesnd ctx trm1
+  (Inl trm1 typ1) -> gettypeinl ctx trm1 typ1
+  (Inr trm1 typ1) -> gettypeinr ctx trm1 typ1
+  (Case trm1 trm2 trm3) -> gettypecase ctx trm1 trm2 trm3
+  (Abort trm1 typ1) -> gettypeabort ctx trm1 typ1
+
 ```
 
 To type-check a variable, we just look up its type in the context. Since the result is a "maybe" type our result will already be of the right type. So we have:
 
 ```haskell 
-gettype :: Context -> Term -> Maybe Type 
-gettype ctx trm0 = case trm0 of 
-   (Var x1) -> Map.lookup x1 ctx 
-   (Abs x1 typ1 trm1) -> do 
-   (App trm1 trm2) -> 
-   (Pair trm1 trm2) -> 
-   (Fst trm1) -> 
-   (Snd trm1) -> 
-   (Inr trm1 typ1) -> 
-   (Inr trm1 typ1) -> 
-   (Case trm1 trm2 trm3) -> 
-   (Abort trm1 typ1) -> 
+gettypevar :: Context -> VarId -> Maybe Type
+gettypevar ctx x1 = Map.lookup x1 ctx
 ```
+
 
 To type-check an abstraction we add the type of the variable to the context and type-check the body of the abstraction on the new context.
 
 ```haskell 
--- | get the type of an abstraction
-gettypeabs :: Context -> Variable -> Type -> Term -> Maybe Type 
-gettypeabs ctx x1 typ1 trm1 = do 
-    let newctx = Map.insert x1 typ1 ctx
-    typ2 <- gettype newctx trm1
-    return (Just (Func typ1 typ2))
+gettypeabs :: Context -> VarId -> Type -> Term -> Maybe Type
+gettypeabs ctx x1 typ1 trm1 = case gettype (Map.insert x1 typ1 ctx) trm1 of
+  (Just typ2) -> Just (Func typ1 typ2)
+  _ -> Nothing
+
 ```
 
-There is more succinct way of writing this function: 
-
 ```haskell 
--- | get the type of an abstraction
-gettypeabs :: Context -> Variable -> Type -> Term -> Maybe Type 
-gettypeabs ctx x1 typ1 trm1 = Func <$> Just typ1 <*> (Map.insert x1 typ1 ctx)
+gettypeapp :: Context -> Term -> Term -> Maybe Type
+gettypeapp ctx trm1 trm2 = case (gettype ctx trm1, gettype ctx trm2) of
+  (Just (Func typ1 typ2), Just typ3) -> if typ1 == typ3 then Just typ2 else Nothing
+  _ -> Nothing
+
+gettypepair :: Context -> Term -> Term -> Maybe Type
+gettypepair ctx trm1 trm2 = case (gettype ctx trm1, gettype ctx trm2) of
+  (Just typ1, Just typ2) -> Just (Prod typ1 typ2)
+  _ -> Nothing
+
+gettypefst :: Context -> Term -> Maybe Type
+gettypefst ctx trm = case gettype ctx trm of
+  (Just (Prod typ1 _)) -> Just typ1
+  _ -> Nothing
+
+gettypesnd :: Context -> Term -> Maybe Type
+gettypesnd ctx trm = case gettype ctx trm of
+  (Just (Prod _ typ1)) -> Just typ1
+  _ -> Nothing
+
+gettypeinl :: Context -> Term -> Type -> Maybe Type
+gettypeinl ctx trm typ = case (gettype ctx trm, typ) of
+  (Just typ1, Sum typ2 _) -> if typ1 == typ2 then Just typ else Nothing
+  _ -> Nothing
+
+gettypeinr :: Context -> Term -> Type -> Maybe Type
+gettypeinr ctx trm typ = case (gettype ctx trm, typ) of
+  (Just typ1, Sum _ typ2) -> if typ1 == typ2 then Just typ else Nothing
+  _ -> Nothing
+
+gettypecase :: Context -> Term -> Term -> Term -> Maybe Type
+gettypecase ctx trm1 trm2 trm3 = case (gettype ctx trm1, gettype ctx trm2, gettype ctx trm3) of
+  (Just (Sum typ1 typ2), Just (Func typ3 typ4), Just (Func typ5 typ6)) ->
+    if typ1 == typ3 && typ2 == typ5 && typ4 == typ6
+      then Just typ6
+      else Nothing
+  _ -> Nothing
+
+gettypeabort :: Context -> Term -> Type -> Maybe Type
+gettypeabort ctx trm typ = case gettype ctx trm of
+  (Just Bot) -> Just typ
+  _ -> Nothing
+
 ```
 
 
