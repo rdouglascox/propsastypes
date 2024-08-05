@@ -25,16 +25,23 @@ source-repository head
 
 library
   exposed-modules:
-      ESTLC.Abs
-      ESTLC.ErrM
-      ESTLC.Lex
-      ESTLC.Par
-      ESTLC.Print
-      ESTLC.Skel
+      Church.Abs
+      Church.ErrM
+      Church.Lex
+      Church.Par
+      Church.Print
+      Church.Skel
+      Curry.Abs
+      Curry.ErrM
+      Curry.Lex
+      Curry.Par
+      Curry.Print
+      Curry.Skel
       Examples
-      Lib
       Printing
+      PropsAsTypes
       TypeChecking
+      TypeInference
   other-modules:
       Paths_propsastypes
   autogen-modules:

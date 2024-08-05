@@ -5,10 +5,10 @@ module Printing (
   printderivation,
 ) where
 
+import Church.Abs
 import qualified Data.List as List
 import qualified Data.Map as Map
 import Data.Tree
-import ESTLC.Abs
 import TypeChecking
 
 -- printing
@@ -19,9 +19,9 @@ printtype typ = case typ of
   B -> "B"
   C -> "C"
   D -> "D"
-  (Prod x y) -> "(" ++ printtype x ++ "*" ++ printtype y ++ ")"
+  (Prod x y) -> "(" ++ printtype x ++ "×" ++ printtype y ++ ")"
   (Sum x y) -> "(" ++ printtype x ++ "+" ++ printtype y ++ ")"
-  (Func x y) -> "(" ++ printtype x ++ "->" ++ printtype y ++ ")"
+  (Func x y) -> "(" ++ printtype x ++ "→" ++ printtype y ++ ")"
   Bot -> ""
 
 printterm :: Term -> String

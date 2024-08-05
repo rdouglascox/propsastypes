@@ -7,12 +7,11 @@ module TypeChecking (
   derivetype,
 ) where
 
+import Church.Abs
+import Church.Par
 import Data.List (intersperse)
 import qualified Data.Map as Map
 import Data.Tree
-import ESTLC.Abs
-import ESTLC.Par
-import ESTLC.Print
 
 type Context = Map.Map VarId Type
 

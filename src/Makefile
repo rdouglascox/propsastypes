@@ -14,12 +14,12 @@ ALEX_OPTS  = --ghc
 
 # Default goal.
 
-all : ESTLC/Test
+all : Curry/Test
 
 # Rules for building the parser.
 
-ESTLC/Abs.hs ESTLC/Lex.x ESTLC/Par.y ESTLC/Print.hs ESTLC/Test.hs : ESTLC.cf
-	bnfc --haskell -d ESTLC.cf
+Curry/Abs.hs Curry/Lex.x Curry/Par.y Curry/Print.hs Curry/Test.hs : Curry.cf
+	bnfc --haskell -d Curry.cf
 
 %.hs : %.y
 	${HAPPY} ${HAPPY_OPTS} $<
@@ -27,16 +27,16 @@ ESTLC/Abs.hs ESTLC/Lex.x ESTLC/Par.y ESTLC/Print.hs ESTLC/Test.hs : ESTLC.cf
 %.hs : %.x
 	${ALEX} ${ALEX_OPTS} $<
 
-ESTLC/Test : ESTLC/Abs.hs ESTLC/Lex.hs ESTLC/Par.hs ESTLC/Print.hs ESTLC/Test.hs
+Curry/Test : Curry/Abs.hs Curry/Lex.hs Curry/Par.hs Curry/Print.hs Curry/Test.hs
 	${GHC} ${GHC_OPTS} $@
 
 # Rules for cleaning generated files.
 
 clean :
-	-rm -f ESTLC/*.hi ESTLC/*.o ESTLC/*.log ESTLC/*.aux ESTLC/*.dvi
+	-rm -f Curry/*.hi Curry/*.o Curry/*.log Curry/*.aux Curry/*.dvi
 
 distclean : clean
-	-rm -f ESTLC/Abs.hs ESTLC/Abs.hs.bak ESTLC/ComposOp.hs ESTLC/ComposOp.hs.bak ESTLC/Doc.txt ESTLC/Doc.txt.bak ESTLC/ErrM.hs ESTLC/ErrM.hs.bak ESTLC/Layout.hs ESTLC/Layout.hs.bak ESTLC/Lex.x ESTLC/Lex.x.bak ESTLC/Par.y ESTLC/Par.y.bak ESTLC/Print.hs ESTLC/Print.hs.bak ESTLC/Skel.hs ESTLC/Skel.hs.bak ESTLC/Test.hs ESTLC/Test.hs.bak ESTLC/XML.hs ESTLC/XML.hs.bak ESTLC/AST.agda ESTLC/AST.agda.bak ESTLC/Parser.agda ESTLC/Parser.agda.bak ESTLC/IOLib.agda ESTLC/IOLib.agda.bak ESTLC/Main.agda ESTLC/Main.agda.bak ESTLC/ESTLC.dtd ESTLC/ESTLC.dtd.bak ESTLC/Test ESTLC/Lex.hs ESTLC/Par.hs ESTLC/Par.info ESTLC/ParData.hs Makefile
-	-rmdir -p ESTLC/
+	-rm -f Curry/Abs.hs Curry/Abs.hs.bak Curry/ComposOp.hs Curry/ComposOp.hs.bak Curry/Doc.txt Curry/Doc.txt.bak Curry/ErrM.hs Curry/ErrM.hs.bak Curry/Layout.hs Curry/Layout.hs.bak Curry/Lex.x Curry/Lex.x.bak Curry/Par.y Curry/Par.y.bak Curry/Print.hs Curry/Print.hs.bak Curry/Skel.hs Curry/Skel.hs.bak Curry/Test.hs Curry/Test.hs.bak Curry/XML.hs Curry/XML.hs.bak Curry/AST.agda Curry/AST.agda.bak Curry/Parser.agda Curry/Parser.agda.bak Curry/IOLib.agda Curry/IOLib.agda.bak Curry/Main.agda Curry/Main.agda.bak Curry/Curry.dtd Curry/Curry.dtd.bak Curry/Test Curry/Lex.hs Curry/Par.hs Curry/Par.info Curry/ParData.hs Makefile
+	-rmdir -p Curry/
 
 # EOF
