@@ -25,23 +25,13 @@ source-repository head
 
 library
   exposed-modules:
-      Church.Abs
       Church.ErrM
-      Church.Lex
-      Church.Par
-      Church.Print
-      Church.Skel
-      Curry.Abs
-      Curry.ErrM
-      Curry.Lex
-      Curry.Par
-      Curry.Print
-      Curry.Skel
-      Examples
-      Printing
+      Church.Examples
+      Church.Parsing
+      Church.Printing
+      Church.TypeChecking
+      Curry.TypeInference
       PropsAsTypes
-      TypeChecking
-      TypeInference
   other-modules:
       Paths_propsastypes
   autogen-modules:
