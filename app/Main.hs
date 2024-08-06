@@ -1,6 +1,6 @@
 module Main (main) where
 
-import PropsAsTypes (parsecheckprint)
+import Lib (parsecheckprint)
 
 main :: IO ()
 main = do
