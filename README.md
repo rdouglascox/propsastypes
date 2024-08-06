@@ -164,6 +164,94 @@ gettypeabort ctx trm typ = case gettype ctx trm of
 
 ```
 
+## Type Inference 
+
+Okay, that's cool. We've implemented type-checking for the extended simply typed lambda calculus. As mentioned earlier, this approach is a little cumbersome. It would be better if we could write terms without type annotations and have an algorithm "infer" a type for the term. 
+
+Here's what our terms look like now. Notice the lack of type annotations on abstractions, left and right injections, and abort. 
+
+```haskell
+data Term = Var VarId               --e.g. x
+          | Abs VarId Term          --e.g. \x.x
+          | App Term Term           --e.g. (x y)
+          | Pair Term Term          --e.g. {x,y}
+          | Fst Term                --e.g. fst x 
+          | Snd Term                --e.g. snd x
+          | Inl Term                --e.g. inl x
+          | Inr Term                --e.g. inr x 
+          | Case Term Term Term     --e.g. case x of y | z
+          | Abort Term              --e.g. abort x
+          deriving (Show,Eq)
+```
+
+Our approach to type inference is called constraint-based typing. The basic idea is that rather than checking the type of a term as we encounter it, we just register certain constraints that need to be satisfied in order for the term to be well-typed. Constraint generation is just like checking but without the actual checking. 
+
+```haskell
+derive :: Context -> Term -> State Type (Type, ConstraintSet)
+derive ctx (Var x) = case Map.lookup (Var x) ctx of
+  Just typ -> return (typ, Set.empty)
+  Nothing -> error "uh oh, this should never happen"
+derive ctx (App trm1 trm2) = do
+  newvar <- newtypevar
+  (ftype, fcons) <- derive ctx trm1 -- the type and constraints of the function
+  (atype, acons) <- derive ctx trm2 -- the type and constraints of the argument
+  let newconstraints = Set.unions [fcons, acons, Set.singleton (Constraint ftype (Func atype newvar))]
+  return (newvar, newconstraints)
+derive ctx (Abs var trm1) = do
+  newvar <- newtypevar
+  let newctx = Map.insert (Var var) newvar ctx
+  (ntype, ncons) <- derive newctx trm1
+  return (Func newvar ntype, ncons)
+derive ctx (Pair trm1 trm2) = do
+  (ntyp1, ncs1) <- derive ctx trm1
+  (ntyp2, ncs2) <- derive ctx trm2
+  let newconstraints = Set.unions [ncs1, ncs2]
+  return (Prod ntyp1 ntyp2, newconstraints)
+derive ctx (Fst trm) = do
+  newvar1 <- newtypevar
+  newvar2 <- newtypevar
+  (ntype, ncs) <- derive ctx trm
+  let newconstraints = Set.unions [ncs, Set.singleton (Constraint ntype (Prod newvar1 newvar2))]
+  return (newvar1, newconstraints)
+derive ctx (Snd trm) = do
+  newvar1 <- newtypevar
+  newvar2 <- newtypevar
+  (ntype, ncs) <- derive ctx trm
+  let newconstraints = Set.unions [ncs, Set.singleton (Constraint ntype (Prod newvar1 newvar2))]
+  return (newvar2, newconstraints)
+derive ctx (Inl trm) = do
+  newvar1 <- newtypevar
+  newvar2 <- newtypevar
+  (ntype, ncs) <- derive ctx trm
+  let newconstraints = Set.unions [ncs, Set.singleton (Constraint newvar1 (Sum ntype newvar2))]
+  return (newvar1, newconstraints)
+derive ctx (Inr trm) = do
+  newvar1 <- newtypevar
+  newvar2 <- newtypevar
+  (ntype, ncs) <- derive ctx trm
+  let newconstraints = Set.unions [ncs, Set.singleton (Constraint newvar1 (Sum newvar2 ntype))]
+  return (newvar1, newconstraints)
+derive ctx (Case trm1 trm2 trm3) = do
+  newvar1 <- newtypevar
+  newvar2 <- newtypevar
+  newvar3 <- newtypevar
+  (ntype1, ncs1) <- derive ctx trm1
+  (ntype2, ncs2) <- derive ctx trm2
+  (ntype3, ncs3) <- derive ctx trm3
+  let newconstraints = Set.unions [ncs1, ncs2, ncs3, Set.singleton (Constraint ntype1 (Sum newvar1 newvar2)), Set.singleton (Constraint ntype2 (Func newvar1 newvar3)), Set.singleton (Constraint ntype3 (Func newvar2 newvar3))]
+  return (newvar3, newconstraints)
+derive ctx (Abrt trm) = do
+  newvar1 <- newtypevar
+  (ntype, ncs) <- derive ctx trm
+  let newconstraints = Set.unions [ncs, Set.singleton (Constraint ntype Bot)]
+  return (newvar1, newconstraints)
+derive _ T = do return (Bool, Set.empty)
+derive _ F = do return (Bool, Set.empty)
+
+```
+
+
+
 
 
 
